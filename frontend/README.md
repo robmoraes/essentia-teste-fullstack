@@ -1,6 +1,15 @@
 # essentia-teste-fulltack Frontend
 Projeto de frontend para processo de seleção da empresa Essentia
 
+## Visão Geral
+
+Este é um teste para processo seletivo de full stack, as camadas de backend e frontend foram desenvolvidas em projetos separados, para realizar a instalação de cada uma, é necessário seguir as instruções que estão nas pastas
+
+- /backend
+- /frontend
+
+Estas são as instruções para instalação da camada de Front-end.
+
 ## Requisitos
 
 - Quasar 1.15

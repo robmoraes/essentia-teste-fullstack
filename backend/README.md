@@ -3,7 +3,12 @@ Projeto backend do desafio da empresa Essentia
 
 ## Visão Geral
 
-A camada de back-end foi desenvolvida como uma API aplicando um sistema de autenticação com JWT para autenticação de usuários.
+Este é um teste para processo seletivo de full stack, as camadas de backend e frontend foram desenvolvidas em projetos separados, para realizar a instalação de cada uma, é necessário seguir as instruções que estão nas pastas
+
+- /backend
+- /frontend
+
+Estas são as instruções para instalação da camada de Back-end.
 
 ## Requisitos do Servidor
 
