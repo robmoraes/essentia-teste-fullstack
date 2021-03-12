@@ -94,6 +94,15 @@ Os códigos gerados "Client Id" e "Client secret" devem ser copiados para o arqu
 - PASSPORT_PERSONAL_ACCESS_CLIENT_ID=
 - PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET=
 
+## Uploads
+
+O upload utiliza um recurso do laravel chamado Storage, rode o comando abaixo para que as imagens possam ser acessadas pelo frontend:
+
+```bash
+cd /pasta/do/projeto/backend/
+php artisan storage:link
+```
+
 ## Pronto
 
 O projeto de backend está configurado e pronto para rodar. Será necessário configurar um site no Apache2, ou httpd expondo a pasta "/public" para rodar a aplicação.
