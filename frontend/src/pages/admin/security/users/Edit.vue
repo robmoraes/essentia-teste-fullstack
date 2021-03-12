@@ -2,7 +2,7 @@
   <q-page padding>
     <q-card style="max-width:600px; width:100%;">
       <q-card-section>
-        <div class="text-h6">Editar Usuário</div>
+        <div class="text-h6">Editar Cliente</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
@@ -33,17 +33,50 @@
             ]"
           />
 
-          <div class="q-pa-lg">
-            Perfis:
-            <q-option-group
-              v-model="rolesSelecteds"
-              :options="rolesOptions"
-              color="primary"
-              type="toggle"
-            />
+          <q-input
+            filled
+            v-model="record.phone"
+            label="Telefone"
+            mask="(##) #### - #####"
+          />
+
+          <q-input
+            v-model="record.password"
+            lazy-rules filled :type="isPwd ? 'password' : 'text'"
+            label="Senha"
+            hint="Informe a senha apenas se quiser alterar"
+            >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
+
+          <q-file
+            filled
+            v-model="photo_upload"
+            style="max-width:569px;"
+            label="Escolha uma foto"
+          />
+
+          <div v-if="(record.photo)">
+            <q-img
+              :src="record.photo_url"
+              style="height: 140px; max-width: 150px"
+            >
+              <template v-slot:error>
+                <div class="absolute-full flex flex-center bg-negative text-white">
+                  Cannot load image
+                </div>
+              </template>
+            </q-img>
+            <a class="q-ma-md" href="javascript:void(0)" @click="removePhoto">Remover</a>
           </div>
 
-          <div>
+          <div style="border-top: solid 1px #eee;padding-top:15px;">
             <q-btn label="Salvar" type="submit" color="primary" />
           </div>
         </q-form>
@@ -59,8 +92,7 @@ export default {
   data () {
     return {
       record: {},
-      rolesOptions: [],
-      rolesSelecteds: []
+      photo_upload: null
     }
   },
   methods: {
@@ -71,9 +103,8 @@ export default {
         .then(res => {
           this.$q.loading.hide()
           this.record = res.data
-          this.record.roles.forEach(el => {
-            this.rolesSelecteds.push(el.id)
-          })
+          this.record.password = ''
+          this.photo_upload = null
         })
         .catch(err => {
           this.$q.loading.hide()
@@ -87,31 +118,46 @@ export default {
           }
         })
     },
+    removePhoto () {
+      this.$q.dialog({
+        title: 'Confirm',
+        message: 'Confirma remoção da foto?',
+        color: 'negative',
+        ok: 'Sim, confirmo!',
+        cancel: true
+      })
+        .onOk(() => {
+          this.record.photo = ''
+          this.record.photo_url = null
+        })
+    },
     onSubmit () {
       this.$q.loading.show()
       const payload = {
         id: this.record.id,
         name: this.record.name,
         email: this.record.email,
+        phone: this.record.phone,
+        photo: this.record.photo,
         password: this.record.password,
-        roles: this.rolesSelecteds
+        photo_upload: this.photo_upload
       }
+
       this.update(payload)
         .then(res => {
           this.$q.loading.hide()
           this.$q.notify({
             color: 'positive',
-            message: 'Usuário atualizado.',
+            message: 'Cliente atualizado.',
             icon: 'save',
             position: 'top'
           })
-          this.$router.push('/admin/security/users')
+          this.loadRecord(payload.id)
         })
         .catch(err => {
           this.$q.loading.hide()
           if (err) {
             if (err.status === 422) {
-              console.log(err.data.errors)
               Object.keys(err.data.errors).forEach(itemKey => {
                 const element = err.data.errors[itemKey]
                 element.map((value, index) => {
@@ -128,39 +174,12 @@ export default {
             }
           }
         })
-    },
-    loadRoles () {
-      this.$store.dispatch('roles/list')
-        .then(res => { this.prepareRolesOptions(res.data) })
-        .catch(err => {
-          if (err) {
-            this.$q.notify({
-              color: 'negative',
-              message: `Ocorreu algum problema ao tentar exibir os perfis. [${err.status} ${err.data.message}]`,
-              icon: 'report_problem',
-              position: 'top'
-            })
-          }
-        })
-    },
-    prepareRolesOptions (collection) {
-      collection.forEach(element => {
-        let category = ''
-        if (element.category) {
-          category = `${element.category}:`
-        }
-        this.rolesOptions.push({
-          label: `${category} ${element.label}`,
-          value: element.id
-        })
-      })
     }
   },
   mounted () {
     this.loadRecord(
       this.$route.params.id
     )
-    this.loadRoles()
   }
 }
 </script>
