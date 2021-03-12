@@ -1,5 +1,5 @@
 # essentia-teste-fullstack
-Projeto backend do desafio da empresa Seventh
+Projeto backend do desafio da empresa Essentia
 
 ## Visão Geral
 
@@ -79,7 +79,7 @@ $ php artisan passport:client --password
 Confirme as duas perguntas seguintes com ENTER para usar o valor padrão de ambas:
 
 ```bash
-What should we name the password grant client? [Desafio Seventh Password Grant Client]:
+What should we name the password grant client? [Desafio Essentia Password Grant Client]:
 
 Which user provider should this client use to retrieve users? [users]:
   [0] users
