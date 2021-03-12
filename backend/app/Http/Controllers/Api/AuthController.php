@@ -39,11 +39,9 @@ class AuthController extends Controller
 
             return response()->json([
                 'token' => $token,
-                'user' => $user
+                'user' => $user->data
             ]);
 
-            // return response($response->getBody(), 200)
-            //     ->header('Content-Type', 'application/json');
         } catch (ClientException $e) {
             return response($e->getMessage(), 400);
         }

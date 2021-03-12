@@ -16,15 +16,15 @@ class SecuritySeeder extends Seeder
     public function run()
     {
         // Perfil para super usuário
-        $permission = Permission::create([
+        $allPermission = Permission::create([
         	'name' => 'all',
         	'label' => 'Everything',
         ]);
-        $role = Role::create([
+        $superRole = Role::create([
         	'name' => 'super',
         	'label' => 'Superuser',
         ]);
-        $role->permissions()->sync($permission);
+        $superRole->permissions()->sync($allPermission);
 
         // Perfil Admin
         $adminRole = Role::create([
@@ -116,6 +116,6 @@ class SecuritySeeder extends Seeder
             'password' => Hash::make('12345678'),
         ]);
 
-        $user->roles()->sync($adminRole);
+        $user->roles()->sync($superRole);
     }
 }
