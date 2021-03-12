@@ -1,8 +1,8 @@
 <template>
   <q-page padding>
-    <div class="q-pa-md" style="max-width:800px;">
+    <div class="q-pa-md" style="width:100%;">
       <q-table
-        title="Lista de Usuários"
+        title="Lista de Clientes"
         :loading="loadingTable"
         :data="records"
         :columns="columns"
@@ -27,6 +27,7 @@
 
         <template v-slot:header="props">
           <q-tr :props="props">
+            <q-th></q-th>
             <q-th
               v-for="col in props.cols"
               :key="col.name"
@@ -40,6 +41,15 @@
 
         <template v-slot:body="props">
           <q-tr :props="props">
+            <q-td auto-width>
+              <q-avatar size="36px" class="q-mb-sm">
+                <q-img
+                  :src="(props.row.photo_url)?props.row.photo_url:null"
+                >
+                  <template v-slot:error></template>
+                </q-img>
+              </q-avatar>
+            </q-td>
             <q-td
               v-for="col in props.cols"
               :key="col.name"
@@ -49,7 +59,7 @@
             </q-td>
             <q-td align="center">
               <q-btn class="q-mr-sm" size="sm" color="accent" round dense icon="edit" @click="editClick(props.row)"></q-btn>
-              <!-- <q-btn size="sm" color="red" round dense icon="remove" @click="destroyClick(props.row)"></q-btn> -->
+              <q-btn size="sm" color="red" round dense icon="remove" @click="destroyClick(props.row)"></q-btn>
             </q-td>
           </q-tr>
         </template>
@@ -57,7 +67,7 @@
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <!-- <q-btn fab icon="add" color="accent" @click="addClick" /> -->
+      <q-btn fab icon="add" color="accent" @click="addClick" />
       <q-btn fab icon="refresh" color="primary" @click="listRecords()" />
     </q-page-sticky>
   </q-page>
@@ -75,7 +85,8 @@ export default {
       filter: '',
       columns: [
         { name: 'name', field: 'name', required: true, label: 'Nome', align: 'left', sortable: true },
-        { name: 'email', field: 'email', align: 'left', label: 'Email', sortable: true }
+        { name: 'email', field: 'email', align: 'left', label: 'Email', sortable: true },
+        { name: 'phone', field: 'phone', align: 'left', label: 'Telefone', sortable: true }
       ]
     }
   },
