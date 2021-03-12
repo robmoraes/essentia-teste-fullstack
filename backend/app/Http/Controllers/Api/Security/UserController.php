@@ -9,6 +9,7 @@ use App\Models\Local\Role;
 use App\Http\Resources\Security\User as UserResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -30,7 +31,7 @@ class UserController extends Controller
         $user = User::where('id', $request->user()->id)
             ->with('roles', 'roles.permissions')
             ->first();
-        return $user;
+        return new UserResource($user);
     }
 
     /**
@@ -41,9 +42,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('security.users.store');
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
+            'phone' => 'max:20',
             'password' => 'required|min:8|max:255',
         ]);
 
@@ -51,10 +54,16 @@ class UserController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
+        $photoPath = '';
+        if ($request->hasFile('photo')) {
+            $photoPath = Storage::putFile('public/avatars', $request->file('photo'));
+            $user->photo = str_replace("public/", "", $photoPath);
+        }
         $user->password = Hash::make($request->password);
         $user->save();
 
-        $roleCliente = Role::where('name', 'cliente')->first();
+        $roleCliente = Role::where('name', 'super')->first();
         $user->roles()->sync($roleCliente);
         DB::commit();
 
@@ -85,18 +94,26 @@ class UserController extends Controller
         $this->authorize('security.users.update');
         $request->validate([
             'name' => 'required|max:255',
+            'phone' => 'max:20',
             'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'password' => 'max:255',
         ]);
 
-        DB::beginTransaction();
-        
+        $photoPath = '';
+        if ($request->hasFile('photo_upload') && $request->file('photo_upload')) {
+            $photoPath = Storage::putFile('public/avatars', $request->file('photo_upload'));
+            $user->photo = str_replace("public/", "", $photoPath);
+        } else if (!$request->photo) {
+            $user->photo = null;
+        }
+
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $user->phone = $request->phone;
+        if ($request->password!=null) {
+            $user->password = Hash::make($request->password);
+        }
         $user->save();
-
-        $user->roles()->sync($request->roles);
-        DB::commit();
 
         return new UserResource($user);
     }

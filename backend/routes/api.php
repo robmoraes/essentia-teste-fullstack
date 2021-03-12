@@ -22,3 +22,5 @@ Route::middleware('auth:api')->get('/user', 'Api\Security\UserController@getAuth
 Route::middleware('auth:api')->apiResource('/security/users', 'Api\Security\UserController');
 Route::middleware('auth:api')->apiResource('/security/permissions', 'Api\Security\PermissionController');
 Route::middleware('auth:api')->apiResource('/security/roles', 'Api\Security\RoleController');
+
+Route::middleware('auth:api')->post('/security/users/{user}', 'Api\Security\UserController@update');
