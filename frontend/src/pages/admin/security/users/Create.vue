@@ -37,7 +37,7 @@
         <q-input
           filled
           v-model="record.phone"
-          label="Phone"
+          label="Telefone"
           mask="(##) #### - #####"
           hint="Mask: (##) #### - #####"
         />
@@ -84,11 +84,11 @@ export default {
   data () {
     return {
       record: {
-        name: 'carlos',
-        email: 'email@example.com',
-        phone: '48998314568',
+        name: null,
+        email: null,
+        phone: null,
         photo: null,
-        password: '12345678'
+        password: null
       },
       isPwd: true
     }
