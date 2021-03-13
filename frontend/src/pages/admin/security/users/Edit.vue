@@ -41,8 +41,9 @@
           />
 
           <q-input
-            v-model="record.password"
-            lazy-rules filled :type="isPwd ? 'password' : 'text'"
+            v-model="password"
+            lazy-rules filled
+            :type="isPwd ? 'password' : 'text'"
             label="Senha"
             hint="Informe a senha apenas se quiser alterar"
             >
@@ -92,7 +93,9 @@ export default {
   data () {
     return {
       record: {},
-      photo_upload: null
+      password: null,
+      photo_upload: null,
+      isPwd: true
     }
   },
   methods: {
@@ -103,7 +106,6 @@ export default {
         .then(res => {
           this.$q.loading.hide()
           this.record = res.data
-          this.record.password = ''
           this.photo_upload = null
         })
         .catch(err => {
@@ -139,7 +141,7 @@ export default {
         email: this.record.email,
         phone: this.record.phone,
         photo: this.record.photo,
-        password: this.record.password,
+        password: (this.password == null) ? '' : this.password,
         photo_upload: this.photo_upload
       }
 
