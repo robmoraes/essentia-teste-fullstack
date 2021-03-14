@@ -38,6 +38,9 @@
             v-model="record.phone"
             label="Telefone"
             mask="(##) #### - #####"
+            bottom-slots
+            error-message="Falta número aí..."
+            :error="!isInvalid"
           />
 
           <q-input
@@ -182,6 +185,17 @@ export default {
     this.loadRecord(
       this.$route.params.id
     )
+  },
+  computed: {
+    isInvalid () {
+      const p = this.record.phone
+      switch (p) {
+        case null:
+        case undefined:
+          return false
+      }
+      return (p.length === 0 || p.length >= 16)
+    }
   }
 }
 </script>

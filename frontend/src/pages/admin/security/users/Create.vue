@@ -35,12 +35,14 @@
         />
 
         <q-input
-          filled
-          v-model="record.phone"
-          label="Telefone"
-          mask="(##) #### - #####"
-          hint="Mask: (##) #### - #####"
-        />
+            filled
+            v-model="record.phone"
+            label="Telefone"
+            mask="(##) #### - #####"
+            bottom-slots
+            error-message="Falta número aí..."
+            :error="!isInvalid"
+          />
 
         <q-input
           v-model="record.password"
@@ -86,7 +88,7 @@ export default {
       record: {
         name: null,
         email: null,
-        phone: null,
+        phone: '',
         photo: null,
         password: null
       },
@@ -136,6 +138,17 @@ export default {
             }
           }
         })
+    }
+  },
+  computed: {
+    isInvalid () {
+      const p = this.record.phone
+      switch (p) {
+        case null:
+        case undefined:
+          return false
+      }
+      return (p.length === 0 || p.length >= 16)
     }
   }
 }
